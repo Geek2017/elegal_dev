@@ -346,4 +346,13 @@ class TransactionController extends Controller
 
         return response()->json($transaction);
     }
+
+    public function duplicatefee(Request $request){
+        $ids = request('dup_case_id');
+        dd($ids);
+        // dd(request()->all());
+        // dd(request());
+
+        return response()->json($ids);
+    }
 }

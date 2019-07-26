@@ -94,13 +94,15 @@ class ContractController extends Controller
      * @param  \App\Contract  $contract
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contract $contract)
+    public function edit(Contract $contract, CaseManagement $caseManagement)
     {
         if(!auth()->user()->can('edit-contract')){
             flash('You have no Permission!', 'danger');
             return back();
         }
-
+        //fetch case for the contract
+        $case = $caseManagement->where('transaction_id', $contract->transaction_id)
+                    ->get();
         $data = Transaction::with('client')
             ->with('contract')
             ->find($contract->transaction_id);
@@ -312,6 +314,12 @@ class ContractController extends Controller
         return response()->json($data);
     }
 
+    public function casename(Request $request)
+    {
+        $type = $request->input('type');
+        $ids = Contract::where('client_id', $type)->pluck('transaction_id')->toArray();
 
-
+        $case = CaseManagement::whereIn('transaction_id', $ids)->get();
+        return response()->json($case);
+    }
 }

@@ -4,7 +4,6 @@
 
 
 @section('content')
-
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-8">
             <h2>{{ ($action === 'create') ? 'Define' : 'Edit' }} Contract</h2>
@@ -61,11 +60,11 @@
                                 <h5>Contract Information</h5>
                             </div>
                             <div class="ibox-content">
-
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Type of Contract:</label>
+                                            <input type="hidden" value="{{ $data->client_id }}" name="client_id">
                                             @switch($action)
                                                 @case('create')
                                                 {!! Form::select('contract_type', array('special' => 'Special Retainer', 'general' => 'General Retainer'), $data->contract->contract_type, array('data-value' => ($data->contract->contract_type != null)? $data->contract->contract_type : '', 'class' => 'form-control contract-type', 'placeholder' => 'Select type')) !!}
@@ -118,7 +117,7 @@
 
             </div>
 
-            <div class="col-sm-9" id="">
+        <div class="col-sm-9" id="">
                 <div id="retainer-box"></div>
             </div>
 
@@ -367,6 +366,16 @@
                         modal.find('#modal-save-btn').text('Save');
                         modal.modal({backdrop: 'static', keyboard: false});
                         break;
+                    case 'duplicate':
+                        modal.find('.modal-dialog').removeClass('modal-lg').addClass('modal-sm').end()
+                            .find('.modal-title').text('Duplicate Fee').end()
+                            .find('.modal-body').empty().append(caseForm);
+                            getCase();
+                        modal.data('type',type);
+                        modal.data('id',id);
+                        modal.find('#modal-save-btn').text('Save');
+                        modal.modal({backdrop: 'static', keyboard: false});
+                        break;
                 }
             });
 
@@ -536,6 +545,24 @@
                             id: transID
                         },function(data){
                             loadDetails(data);
+                            modal.modal('toggle');
+                        });
+                        break;
+                    case 'duplicate':
+                        //alert($('#case-select').find(":selected").val());
+                        console.log(action);
+                        console.log(id);
+                        $.post('{!! route('store-duplicate-fee') !!}',{
+                            _token: '{!! csrf_token() !!}',
+                            dup_case_id: $('#case-select').find(":selected").val()
+                        },function(data){
+                            switch(contract){
+                                case 'special':
+                                    loadDetails(data.cases.id);
+                                    break;
+                                default:
+                                    loadDetails();
+                            }
                             modal.modal('toggle');
                         });
                         break;
@@ -740,6 +767,22 @@
                 });
             }
 
+            function getCase() {
+                $.get('{!! route('get-case-name') !!}', {
+                    type: $('#contract-info').find('input[name="client_id"]').val()
+                    
+                }, function (data) {
+                    console.log(data);
+                    if (data.length != 0) {
+                        modal.find('#case-select').empty().append('<option value="'+ null +'">Select Case to Duplicate Fee</option>');
+                        for (var a = 0; a < data.length; a++) {
+                            modal.find('#case-select').append('<option name="dup_case_id" value="' + data[a].id + '">' + data[a].title + '</option>');
+                        }
+                         modal.find('#case-select').chosen().trigger("chosen:updated");
+                         
+                    }
+                });
+            }
             function loadCounsel(type) {
                 $.get('{!! route('load-counsel') !!}',function (data) {
                     console.log('counsel loaded');
@@ -917,6 +960,10 @@
                                                             '<div class="panel-heading">' +
                                                                 'Special Fees' +
                                                                 '<div class="ibox-tools pull-right">' +
+                                                                    
+                                                                    @if(true)
+                                                                    '<button type="button" class="btn btn-xs btn-warning modal-open" data-id="'+ data[a].id +'" data-type="duplicate">Duplicate Fee</button>&nbsp;' +
+                                                                    @endif
                                                                     @if(auth()->user()->can('add-fee-contract'))
                                                                     '<button type="button" class="btn btn-xs btn-success modal-open" data-id="'+ data[a].id +'" data-type="fee">Add Fee</button>' +
                                                                     @endif
@@ -1143,6 +1190,18 @@
                     '<div class="form-group">' +
                     '<label>Fee list</label>' +
                     '<select name="fee-select" id="fee-select" class="form-control">' +
+                    '<option value=""></option>' +
+                    '</select>' +
+                    '</div>' +
+                    '';
+                return data;
+            };
+
+            var caseForm = function () {
+                var data = '' +
+                    '<div class="form-group">' +
+                    '<label>Case List</label>' +
+                    '<select name="case-select" id="case-select" class="form-control">' +
                     '<option value=""></option>' +
                     '</select>' +
                     '</div>' +

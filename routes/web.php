@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
 
     // GLOBAL ROUTES -----------> START
     Route::get('fees', 'FeeController@feeList')->name('fees');
+    Route::get('get-case-name', 'ContractController@casename')->name('get-case-name');
     // GLOBAL ROUTES -----------> END
 
     // UNUSED ROUTES -----------> START
@@ -122,6 +123,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('check-transaction', 'TransactionController@checkTransaction')->name('check-transaction');
         Route::post('store-fee', 'TransactionController@storeFee')->name('store-fee');
         Route::get('delete-fee', 'TransactionController@deleteFee')->name('delete-fee');
+        Route::post('store-duplicate-fee', 'TransactionController@duplicatefee')->name('store-duplicate-fee');
 
         Route::get('get-client-list', 'ClientController@getClientList')->name('get-client-list');
 
@@ -283,7 +285,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('fee-update', 'FeeController@feeUpdate')->name('fee-update');
         Route::post('fee-desc-store', 'FeeController@feeDescStore')->name('fee-desc-store');
         Route::post('fee-desc-update', 'FeeController@feeDescUpdate')->name('fee-desc-update');
-        Route::get('fee-desc-delete', 'FeeController@feeDescDelete')->name('fee-desc-delete');
+        Route::get('fee-desc-delete', 'FeeController@feeDescDelete')->name('fee-desc-delete');        
 
         /* Settings Controller */
         Route::get('note', 'SettingsController@noteIndex')->name('note');
