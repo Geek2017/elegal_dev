@@ -1351,13 +1351,28 @@
     </script>
     
     <script>
-        $( document ).ready(function() {
-            $( "#duplicate_btn" ).trigger( "click" );
-        });
+        // $( document ).ready(function() {
+            
+           
+        // });
 
         function test(){
-            alert(123);
+            // alert(123);
             $('#duplicate_btn').hide(); 
         }
+        // $(window).on('load', function() {
+        //     alert(123);
+        //     var e = new jQuery.Event("click");
+        //     e.pageX = 720;
+        //     e.pageY = 250;
+        //     $( "#duplicate_btn" ).trigger( e );
+        // });
+        setTimeout(function(){
+            // alert(123);
+            // var e = new jQuery.Event("click");
+            // e.pageX = 250;
+            // e.pageY = 720;
+            $( "#test_click" ).trigger("click");
+            }, 500);
     </script>
 @endsection
