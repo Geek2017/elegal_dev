@@ -552,16 +552,15 @@
                         //alert($('#case-select').find(":selected").val());
                         console.log(action);
                         console.log(id);
-                        $.post('{!! route('store-duplicate-fee') !!}',{
+                        $.get('{!! route('store-duplicate-fee') !!}',{
                             _token: '{!! csrf_token() !!}',
+                            case_id: id,
+                            id: transID,
                             dup_case_id: $('#case-select').find(":selected").val()
                         },function(data){
                             switch(contract){
-                                case 'special':
-                                    loadDetails(data.cases.id);
-                                    break;
                                 default:
-                                    loadDetails();
+                                    loadDetails(id);
                             }
                             modal.modal('toggle');
                         });
@@ -960,7 +959,6 @@
                                                             '<div class="panel-heading">' +
                                                                 'Special Fees' +
                                                                 '<div class="ibox-tools pull-right">' +
-                                                                    
                                                                     @if(true)
                                                                     '<button type="button" class="btn btn-xs btn-warning modal-open" data-id="'+ data[a].id +'" data-type="duplicate">Duplicate Fee</button>&nbsp;' +
                                                                     @endif

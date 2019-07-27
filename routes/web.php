@@ -123,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('check-transaction', 'TransactionController@checkTransaction')->name('check-transaction');
         Route::post('store-fee', 'TransactionController@storeFee')->name('store-fee');
         Route::get('delete-fee', 'TransactionController@deleteFee')->name('delete-fee');
-        Route::post('store-duplicate-fee', 'TransactionController@duplicatefee')->name('store-duplicate-fee');
+        Route::get('store-duplicate-fee', 'TransactionController@duplicatefee')->name('store-duplicate-fee');
 
         Route::get('get-client-list', 'ClientController@getClientList')->name('get-client-list');
 

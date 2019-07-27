@@ -348,11 +348,40 @@ class TransactionController extends Controller
     }
 
     public function duplicatefee(Request $request){
-        $ids = request('dup_case_id');
-        dd($ids);
-        // dd(request()->all());
-        // dd(request());
+        $case_id = $request->input('case_id');
+        $dup_case_id = $request->input('dup_case_id');
 
-        return response()->json($ids);
+        $transaction_fee_detail = TransactionFeeDetail::where('case_id', $dup_case_id)->get();
+
+        foreach($transaction_fee_detail as $duplicate_fee){
+            $duplicate_fee = DB::table('transaction_fee_details')->insert(
+                array(
+                    'account_id' => $duplicate_fee->account_id, 
+                    'transaction_id' => $duplicate_fee->transaction_id,
+                    'walk_in_charge_slip_id' => $duplicate_fee->walk_in_charge_slip_id,
+                    'case_id' => $case_id,
+                    'client_id' => $duplicate_fee->client_id,
+                    'contract_id' => $duplicate_fee->contract_id,
+                    'fee_id' => $duplicate_fee->fee_id,
+                    'counsel_id' => $duplicate_fee->counsel_id,
+                    'charge_type' => $duplicate_fee->charge_type,
+                    'special_billing' => $duplicate_fee->special_billing,
+                    'billing_id' => $duplicate_fee->billing_id,
+                    'free_page' => $duplicate_fee->free_page,
+                    'excess_rate' => $duplicate_fee->excess_rate,
+                    'cap_value' => $duplicate_fee->cap_value,
+                    'minutes' => $duplicate_fee->minutes,
+                    'installment' => $duplicate_fee->installment,
+                    'percentage' => $duplicate_fee->percentage,
+                    'amount' => $duplicate_fee->amount,
+                    'total' => $duplicate_fee->total,
+                    'author' => $duplicate_fee->author,
+                    'created_at' => NOW(),
+                    'updated_at' => NOW()
+                )
+            );
+        }    
+
+        return response()->json($duplicate_fee);
     }
 }

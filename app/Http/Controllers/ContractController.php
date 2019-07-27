@@ -101,8 +101,9 @@ class ContractController extends Controller
             return back();
         }
         //fetch case for the contract
-        $case = $caseManagement->where('transaction_id', $contract->transaction_id)
-                    ->get();
+        // $case = $caseManagement->where('transaction_id', $contract->transaction_id)
+        //             ->get();
+        
         $data = Transaction::with('client')
             ->with('contract')
             ->find($contract->transaction_id);
