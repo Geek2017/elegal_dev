@@ -18,7 +18,7 @@
     @yield('styles')
 
 </head>
-@role('admin') <body class="skin-3"> @else <body class=""> @endrole
+@role('admin') <body class="skin-3" > @else <body class=""> @endrole
 {{--<body class="skin-3">--}}
 
 <div id="wrapper">

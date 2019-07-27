@@ -351,7 +351,7 @@ class TransactionController extends Controller
         $case_id = $request->input('case_id');
         $dup_case_id = $request->input('dup_case_id');
 
-        $transaction_fee_detail = TransactionFeeDetail::where('case_id', $dup_case_id)->get();
+        $transaction_fee_detail = TransactionFeeDetail::where('case_id', $dup_case_id)->orderBy('id', 'desc')->get();
 
         foreach($transaction_fee_detail as $duplicate_fee){
             $duplicate_fee = DB::table('transaction_fee_details')->insert(

@@ -765,7 +765,7 @@
                     }
                 });
             }
-
+        
             function getCase() {
                 $.get('{!! route('get-case-name') !!}', {
                     type: $('#contract-info').find('input[name="client_id"]').val()
@@ -850,12 +850,14 @@
                     transaction_id: transID,
                     type: contract
                 },function(data){
+                    // alert(data);
                     console.log(data);
                     if(data.length != 0){
                         switch(contract){
                             case 'special':
                                 var nav = $('.tabs-container > .nav');
                                 var content = $('.tabs-container > .tab-content');
+                                var count = 1;
                                 $('.tabs-container > .nav, .tabs-container > .tab-content').empty();
                                 for(var a = 0; a < data.length; a++){
                                     var active;
@@ -864,7 +866,7 @@
                                     }else{
                                         active = (data[a].id == case_id) ? 'active' : '';
                                     }
-                                    nav.append('<li class="'+ active +' case-'+ data[a].id +'" data-id="'+ data[a].id +'" data-title="'+ data[a].title +'"><a data-toggle="tab" href="#tab-'+ data[a].id +'">'+ (data[a].title ? data[a].title : 'No Title') +'</a></li>');
+                                    nav.append('<li id="cases" class="'+ active +' case-'+ data[a].id +'" data-id="'+ data[a].id +'" data-title="'+ data[a].title +'"><a onclick="test()" id="test_click" data-toggle="tab" href="#tab-'+ data[a].id +'">'+ (data[a].title ? data[a].title : 'No Title') +'</a></li>');
                                     var counselListRow = '';
                                     if(data[a].counsel_list.length > 0){
                                         var caseCounsel = new Array();
@@ -896,7 +898,7 @@
 
                                     var caseDate = (data[a].date === null) ? 'For Filing' : moment(data[a].date).format('ll');
                                     content.append('' +
-                                        '<div id="tab-'+ data[a].id +'" data-id="'+ data[a].id +'" class="tab-pane '+ active +'">' +
+                                        '<div id="tab-'+ data[a].id +'" data-id="'+ data[a].id +'" class="tab-pane '+ active +' '+ count +' ">' +
                                             '<div class="panel-body">' +
                                                 '<div class="row">' +
                                                     '<div class="col-sm-5">' +
@@ -958,10 +960,8 @@
                                                         '<div class="panel panel-default">' +
                                                             '<div class="panel-heading">' +
                                                                 'Special Fees' +
-                                                                '<div class="ibox-tools pull-right">' +
-                                                                    @if(true)
-                                                                    '<button type="button" class="btn btn-xs btn-warning modal-open" data-id="'+ data[a].id +'" data-type="duplicate">Duplicate Fee</button>&nbsp;' +
-                                                                    @endif
+                                                                '<div class="ibox-tools pull-right">' +                                                                      
+                                                                    '<button type="button" class="btn btn-xs btn-warning modal-open" data-id="'+ data[a].id +'" data-type="duplicate" id="duplicate_btn">Duplicate Fee</button>&nbsp;' +
                                                                     @if(auth()->user()->can('add-fee-contract'))
                                                                     '<button type="button" class="btn btn-xs btn-success modal-open" data-id="'+ data[a].id +'" data-type="fee">Add Fee</button>' +
                                                                     @endif
@@ -1079,6 +1079,7 @@
                                             '</tr>' +
                                             '');
                                     }
+                                    count ++;
                                 }
                                 break;
                             default:
@@ -1346,5 +1347,17 @@
             };
 
         });
+        
+    </script>
+    
+    <script>
+        $( document ).ready(function() {
+            $( "#duplicate_btn" ).trigger( "click" );
+        });
+
+        function test(){
+            alert(123);
+            $('#duplicate_btn').hide(); 
+        }
     </script>
 @endsection

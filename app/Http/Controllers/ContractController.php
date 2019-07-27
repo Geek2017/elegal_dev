@@ -94,16 +94,20 @@ class ContractController extends Controller
      * @param  \App\Contract  $contract
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contract $contract, CaseManagement $caseManagement)
+    public function edit(Contract $contract, CaseManagement $caseManagement, TransactionFeeDetail $transactionFeeDetail)
     {
         if(!auth()->user()->can('edit-contract')){
             flash('You have no Permission!', 'danger');
             return back();
         }
         //fetch case for the contract
-        // $case = $caseManagement->where('transaction_id', $contract->transaction_id)
-        //             ->get();
-        
+        $cases = $caseManagement->where('transaction_id', $contract->transaction_id)
+                    ->get();
+
+        foreach($cases as $case){
+            $feedetails = $transactionFeeDetail->where('case_id', $case->id)->get();  
+        }
+
         $data = Transaction::with('client')
             ->with('contract')
             ->find($contract->transaction_id);
@@ -114,7 +118,7 @@ class ContractController extends Controller
         $client_id = str_pad($data->client->id, 5, 0, STR_PAD_LEFT);
         $data['billing'] = $this->billingAdd($data->client);
         $action = 'edit';
-        return view('user.contract.create', compact('data','client_id', 'action'));
+        return view('user.contract.create', compact('data','client_id', 'action', 'cases'));
     }
 
     /**
