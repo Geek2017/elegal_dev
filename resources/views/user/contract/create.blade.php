@@ -520,6 +520,9 @@
                             switch(contract){
                                 case 'special':
                                     loadDetails(data.cases.id);
+                                    setTimeout(function(){
+                                        $( "#test_click" ).trigger("click");
+                                    },400);
                                     break;
                                 default:
                                     loadDetails();
@@ -545,6 +548,9 @@
                             id: transID
                         },function(data){
                             loadDetails(data);
+                            setTimeout(function(){
+                                        $( "#test_click" ).trigger("click");
+                            },400);
                             modal.modal('toggle');
                         });
                         break;
@@ -1351,28 +1357,12 @@
     </script>
     
     <script>
-        // $( document ).ready(function() {
-            
-           
-        // });
-
         function test(){
-            // alert(123);
             $('#duplicate_btn').hide(); 
         }
-        // $(window).on('load', function() {
-        //     alert(123);
-        //     var e = new jQuery.Event("click");
-        //     e.pageX = 720;
-        //     e.pageY = 250;
-        //     $( "#duplicate_btn" ).trigger( e );
-        // });
+
         setTimeout(function(){
-            // alert(123);
-            // var e = new jQuery.Event("click");
-            // e.pageX = 250;
-            // e.pageY = 720;
             $( "#test_click" ).trigger("click");
-            }, 500);
+            },400);
     </script>
 @endsection
